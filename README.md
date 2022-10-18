@@ -69,6 +69,10 @@ positional arguments:
 
 config the `path` in the `relic.py` and the properties you want to export and run the program directly
 
+## 2.4
+
+- Add ability to load extra/hidden stories
+
 ## v2.3.1
 
 - Add `multiline` property support in EP10

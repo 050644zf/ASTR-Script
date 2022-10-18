@@ -19,7 +19,7 @@ infoFlag = False
 
 def reader(story):
     
-    if isinstance(story,func.Story):
+    if isinstance(story,func.Story) or isinstance(story,func.ExtraStory):
         with open(story.storyTxt, encoding='utf-8') as txtFile:
             rawstorytext = txtFile.read()
         storydict = {}
@@ -32,8 +32,11 @@ def reader(story):
         storydict['storyName'] = story.storyName
         counter = 0
         COUNTER_FLAG = True
-        with open(story.storyInfo, encoding='utf-8') as txtFile:
-            storydict['storyInfo'] = txtFile.read()
+        if story.storyInfo:
+            with open(story.storyInfo, encoding='utf-8') as txtFile:
+                storydict['storyInfo'] = txtFile.read()
+        elif story.rawStoryInfo:
+            storydict['storyInfo'] = story.rawStoryInfo
     if isinstance(story, str):
         rawstorytext = story
         storydict = {}
@@ -206,6 +209,9 @@ if __name__=='__main__':
 
         with open(f'ArknightsStoryJson/{lang}/wordcount.json',encoding='utf-8') as jsonFile:
             wordCount = json.load(jsonFile)
+
+        with open(f'ArknightsStoryJson/{lang}/extrastory.json',encoding='utf-8') as jsonFile:
+            extraInfo = json.load(jsonFile)
         
         for event in events:
             if not wordCount.get(event.eventid):
@@ -232,6 +238,38 @@ if __name__=='__main__':
                 
                 wordCount[event.eventid][str(story.f)] = counter
 
+        try:
+            extra_list = func.getExtraAvg(dataPath, lang)
+            extraInfo["extra"] = []
+            for extra in extra_list:
+                storyPath = Path(extra.storyTxt)
+                jsonPath = jsonDataPath/storyPath.relative_to(dataPath).parent/Path(str(storyPath.stem)+'.json')
+                if jsonPath.exists() and not UPDATE_ALL:
+                    continue
+
+                jsonPath.parent.mkdir(exist_ok=True, parents=True)
+                try:
+                    storyJson,counter = reader(extra)
+                    storyInfo[str(extra.f)] = storyJson['storyInfo']
+                except FileNotFoundError:
+                    continue
+
+                with open(jsonPath, 'w', encoding='utf-8') as jsonFile:
+                    json.dump(storyJson,jsonFile, indent=4, ensure_ascii=False)
+                    print(f'File {jsonPath} exported!')
+
+                extraInfo["extra"].append({
+                    "storyName": extra.storyName,
+                    "storyTxt": extra.f,
+                })
+            
+        except:
+            print('No extra story found!')
+
+
+
+
+
         with open(f'ArknightsGameData/{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
             characterData = json.load(jsonFile)
 
@@ -255,6 +293,10 @@ if __name__=='__main__':
         with open(f'ArknightsStoryJson/{lang}/wordcount.json','w',encoding='utf-8') as jsonFile:
             json.dump(wordCount, jsonFile, indent=4, ensure_ascii=False)
             print(f'WordCount Data exported!')
+
+        with open(f'ArknightsStoryJson/{lang}/extrastory.json','w',encoding='utf-8') as jsonFile:
+            json.dump(extraInfo, jsonFile, indent=4, ensure_ascii=False)
+            print(f'ExtraStory Data exported!')
 
 
     
