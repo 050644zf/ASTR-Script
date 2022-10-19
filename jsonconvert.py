@@ -244,8 +244,6 @@ if __name__=='__main__':
             for extra in extra_list:
                 storyPath = Path(extra.storyTxt)
                 jsonPath = jsonDataPath/storyPath.relative_to(dataPath).parent/Path(str(storyPath.stem)+'.json')
-                if jsonPath.exists() and not UPDATE_ALL:
-                    continue
 
                 jsonPath.parent.mkdir(exist_ok=True, parents=True)
                 try:
