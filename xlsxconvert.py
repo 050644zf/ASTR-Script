@@ -3,10 +3,7 @@ import re
 import argparse
 from pathlib import Path
 import os
-from func import getFile
-import func
 from openpyxl.worksheet.hyperlink import Hyperlink
-from jsonconvert import reader
 import sys
 
 
@@ -107,7 +104,7 @@ def xlc(sheet, storyJson):
             
             sheet.append([index,
             f'--{prop}--',
-            f'https://aceship.github.io/AN-EN-Tags/img/avg/{prop}s/{attrs["image"]}.png'])
+            f'https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avg/{prop}s/{attrs["image"]}.png'])
 
         if not f'--{prop}--' in codes:
             codes.append(f'--{prop}--')
@@ -134,8 +131,14 @@ if __name__ == "__main__":
                         const=True, default=False, help="Export all mainline story")
     parser.add_argument('-i', '--info', action='store_const',
                         const=True, default=False, help="Show story info in menu")
+    parser.add_argument('--web', action='store_const', const=True, default=False, help="online mode for ASTR website")
     args = parser.parse_args()
     #args=parser.parse_args(['-r','-i'])
+
+
+    from jsonconvert import reader
+    from func import getFile
+    import func
 
     try:
         if args.EventList:
