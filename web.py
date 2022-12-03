@@ -12,7 +12,7 @@ from xlsxconvert import xlc
 
 characters = []
 codes = ['--Branch--','----','--Decision End--',]
-infoFlag = False
+infoFlag = True
 commentFlag = False
 
 bold = xl.styles.Font(b=True)
@@ -107,8 +107,7 @@ async def web(eventid, lang):
 
     for idx, story in enumerate(event):
         if infoFlag:
-            with open(story.storyInfo, encoding='utf-8') as storyInfoFile:
-                storyInfo = storyInfoFile.read()
+            storyInfo = story.storyInfo_remote
         else:
             storyInfo = None
 
