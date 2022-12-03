@@ -166,6 +166,7 @@ async def web(eventid, lang):
         try:
             wb.save(filename=filename)
             print(f"\033[92mExported to \033[1m{filename}\033[m")
+            return filename
         except PermissionError:
             print('\033[91mPermissionError: Fail to save the file, maybe because you have already opened the file! Close the file and rerun.\033[m')
             sys.exit('PermissionError')
