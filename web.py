@@ -83,7 +83,7 @@ async def web(eventid, lang):
 
     event = Event(Path('ArknightsGameData'),'https://raw.githubusercontent.com/050644zf/ArknightsStoryJson/main' ,lang, eventid)
 
-    filename = f'{event.eventid}_{event.name}.xlsx'
+    filename = f'{event.eventid}.xlsx'
 
     txtList = []
     for story in event:
