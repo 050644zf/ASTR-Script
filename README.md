@@ -16,7 +16,7 @@ Only support story. Guides, tutorial and pop-up msg in battle are not supported 
 
 ## Tutorial
 
-Read the tutorial about the script here: [Tutorial](https://github.com/050644zf/ArknightsStoryReader/blob/master/Tutorial.md)
+Read the tutorial about the script here: [Tutorial](https://github.com/050644zf/ASTR-Script/blob/main/Tutorial.md)
 
 ## usage of story reader
 
