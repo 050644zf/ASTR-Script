@@ -12,7 +12,7 @@
 
 ## 教程
 
-在[这里](https://github.com/050644zf/ArknightsStoryReader/blob/master/Tutorial_cn.md)查看关于本程序的教程
+在[这里](https://github.com/050644zf/ASTR-Script/blob/main/Tutorial_cn.md)查看关于本程序的教程
 
 ## 使用方法
 
