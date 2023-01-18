@@ -4,7 +4,11 @@
 
 A simple python program that help you convert Arknights raw story data into other readable format like Excel or csv.
 
-### ***New:*** **Access the webpage application of ASTR [here](https://050644zf.github.io/ArknightsStoryTextReader/index2.html)!**
+### Using github codespace to export sheet online!
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=495279163&machine=basicLinux32gb&location=SouthEastAsia)
+
+### **Access the webpage application of ASTR [here](https://050644zf.github.io/ArknightsStoryTextReader/index2.html)!**
 
 You can find raw story data in [Kengxxiao/ArknightsGameData](https://github.com/Kengxxiao/ArknightsGameData)
 
@@ -32,7 +36,7 @@ Convert arknights story raw data into xlsx file.
 **optional arguments:**
 
   `-h`, `--help`       show this help message and exit
-  
+
   `-c`, `--comment`    Show Code Comment in raw story file
 
   `-L Langcode`, `--Lang Langcode`    Config the language of the following command, default is zh_CN
@@ -56,7 +60,6 @@ pip install openpyxl
 ```bash
 py csvconvert.py path [path ...]
 ```
-
 
 Convert arknights story raw data into csv file.
 
@@ -206,7 +209,7 @@ Now automatically record all characters' name appear in the whole textsheet and 
 New command to convert all raw story files into one xlsx file.
 
 Now automatically link the image and background to the [Aceship Toolbox CG Gallery](https://aceship.github.io/AN-EN-Tags/akgallery.html)
-  
+
 ## v1.5
 
 Now automatically link the image and background to the mooncell wiki (doesn't support for earlier event like Grani)
