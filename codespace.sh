@@ -1,10 +1,11 @@
 # using light yellow color
 echo -e "\033[1;33m Initializing... \033[0m"
 pip install openpyxl > /dev/null 2>&1
-git clone https://github.com/Kengxxiao/ArknightsGameData.git > /dev/null 2>&1
+echo -e "\033[1;33m Downloading latest data... \033[0m"
+git clone https://github.com/Kengxxiao/ArknightsGameData.git
 # using light green color
 echo -e "\033[1;32m Initialization complete. \033[0m"
-echo -e "\033[1;33m Available servers:\033[0m 'zh_CN','en_US','ko_KR','ja_JP','zh_TW'"
+echo -e "\033[1;33m Available servers:\033[0m zh_CN, en_US, ko_KR, ja_JP, zh_TW"
 echo -e "Enter the server you want to use, press Enter to continue, Blank for zh_CN: "
 read server
 if [ -z "$server" ]; then
