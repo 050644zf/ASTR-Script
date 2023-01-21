@@ -6,7 +6,7 @@ A simple python program that help you convert Arknights raw story data into othe
 
 ### Using github codespace to export sheet online!
 
-[![asciicast](https://asciinema.org/a/Z9oJnDqXordidCoQ3XN56kFVI.svg)](https://asciinema.org/a/Z9oJnDqXordidCoQ3XN56kFVI)
+[![asciicast](https://asciinema.org/a/553265.svg)](https://asciinema.org/a/553265)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=495279163)
 
