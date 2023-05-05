@@ -278,7 +278,7 @@ if __name__=='__main__':
                 if cid.split('_')[0] == 'char':
                     cidx = cid.split('_')[1]
                     cin = cid.split('_')[2]
-                    charDict[cin] = {'name':c['values']['name'],'id':cidx}
+                    charDict[cin] = {'name':c['value']['name'],'id':cidx}
         else:
             for cid in characterData:
                 if cid.split('_')[0] == 'char':
