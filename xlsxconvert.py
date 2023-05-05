@@ -21,13 +21,14 @@ def xlc(sheet, storyJson):
     for idx, line in enumerate(rawlist):
         print(f"\rExporting Line {idx+1}/{len(rawlist)} ... ", end='')
         index = line['id']
-        prop = line['prop']
+        prop:str = line['prop']
+        prop = prop.lower()
         attrs = line['attributes']
 
         if not f'--{prop}--' in codes:
             codes.append(f'--{prop}--')
 
-        if prop == 'Comment' and commentFlag:
+        if prop == 'comment' and commentFlag:
             sheet.append([index,
             '--Comment--',
             attrs['value']])
@@ -48,12 +49,12 @@ def xlc(sheet, storyJson):
             if not attrs.get('name','') in characters:
                 characters.append(attrs.get('name',''))
 
-        if prop == 'Dialog':
+        if prop == 'dialog':
             sheet.append([index,
             '----',
             '----'])
 
-        if prop == 'Decision':
+        if prop == 'decision':
             sheet.append([index,
             '--Decision--',
             '----'])
@@ -67,7 +68,7 @@ def xlc(sheet, storyJson):
             '--Decision End--',
             '----'])
         
-        if prop == 'Predicate':
+        if prop == 'predicate':
             if line.get('endOfOpt'):
                 sheet.append([index,
                 '--Branch--',
@@ -77,14 +78,14 @@ def xlc(sheet, storyJson):
                 '--Branch--',
                 f'> Options_{attrs["references"].replace(";","&")}'])
 
-        if prop == 'Subtitle':
+        if prop == 'subtitle':
             sheet.append([''])
             sheet.append([index,
             '',
             attrs.get('text','')])
             sheet.append([''])
 
-        if prop == 'Sticker':
+        if prop == 'sticker':
             sheet.append([''])
             sheet.append([index,
             '',
