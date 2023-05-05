@@ -269,10 +269,11 @@ if __name__=='__main__':
 
 
         with open(f'ArknightsGameData/{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
-            characterData = json.load(jsonFile)
+            characterData = json.load(jsonFile)['characters']
 
         charDict = {}
-        for cid in characterData:
+        for c in characterData:
+            cid = c['key']
             if cid.split('_')[0] == 'char':
                 cidx = cid.split('_')[1]
                 cin = cid.split('_')[2]
