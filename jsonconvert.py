@@ -269,15 +269,23 @@ if __name__=='__main__':
 
 
         with open(f'ArknightsGameData/{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
-            characterData = json.load(jsonFile)['characters']
+            characterData = json.load(jsonFile)
 
         charDict = {}
-        for c in characterData:
-            cid = c['key']
-            if cid.split('_')[0] == 'char':
-                cidx = cid.split('_')[1]
-                cin = cid.split('_')[2]
-                charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}
+        if characterData.get('characters'):
+            for c in characterData['characters']:
+                cid = c['key']
+                if cid.split('_')[0] == 'char':
+                    cidx = cid.split('_')[1]
+                    cin = cid.split('_')[2]
+                    charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}
+        else:
+            for cid in characterData:
+                if cid.split('_')[0] == 'char':
+                    cidx = cid.split('_')[1]
+                    cin = cid.split('_')[2]
+                    charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}            
+
 
         with open(f'ArknightsStoryJson/{lang}/chardict.json','w',encoding='utf-8') as jsonFile:
             json.dump(charDict, jsonFile, indent=4, ensure_ascii=False)
