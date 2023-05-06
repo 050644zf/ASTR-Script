@@ -272,19 +272,12 @@ if __name__=='__main__':
             characterData = json.load(jsonFile)
 
         charDict = {}
-        if characterData.get('characters'):
-            for c in characterData['characters']:
-                cid = c['key']
-                if cid.split('_')[0] == 'char':
-                    cidx = cid.split('_')[1]
-                    cin = cid.split('_')[2]
-                    charDict[cin] = {'name':c['value']['name'],'id':cidx}
-        else:
-            for cid in characterData:
-                if cid.split('_')[0] == 'char':
-                    cidx = cid.split('_')[1]
-                    cin = cid.split('_')[2]
-                    charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}            
+
+        for cid in characterData:
+            if cid.split('_')[0] == 'char':
+                cidx = cid.split('_')[1]
+                cin = cid.split('_')[2]
+                charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}            
 
 
         with open(f'ArknightsStoryJson/{lang}/chardict.json','w',encoding='utf-8') as jsonFile:
@@ -315,7 +308,6 @@ if __name__=='__main__':
     subprocess.run('git add -A', shell=True)
     subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True)
     print(f'Commit {time.strftime("%Y%m%d")} has created!')
-    #subprocess.run('git push')
     os.chdir('..')
 
     print('Update Success!')
