@@ -8,7 +8,7 @@ import func
 import json
 
 prRe = r"^(?:\[(?P<prop>\w+).*?\])?(?P<content>.*)$"
-pmRe = r"(?:(?P<attr>\w+)=(?P<value>\".+?\"|[\d\.]+|\w+),?\s{,3})"
+pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>\".+?\"|[\d\.]+|\w+),?\s{,3})"
 characters = []
 codes = []
 characterFlag = False
@@ -50,6 +50,8 @@ def reader(story):
     usedOptions = {}
     multiline_buffer = []
     last_multiline = None
+    characterStack = {}
+    crt_char = None
 
     for (index, line) in enumerate(rawstorylist):
         d = {}
@@ -64,6 +66,7 @@ def reader(story):
         d['attributes'] = {}
         parameters = re.findall(pmRe, line)
         if prop == 'name' or prop == '' or prop == None:
+            prop = 'name'
             d['prop'] = 'name'
             d['attributes']['content'] = content
             if COUNTER_FLAG:
@@ -100,7 +103,7 @@ def reader(story):
                 d['attributes']['joined'] = joined_line
 
 
-        if prop == 'Decision':
+        if prop.lower() == 'decision':
             d['targetLine'] = {}
             options = d['attributes']['options'].split(';')
             if COUNTER_FLAG:
@@ -112,7 +115,7 @@ def reader(story):
                     currentOptions[value] = {'option':options[idx], 'Decision':index}
                     d['targetLine'][value] = ''
 
-        if prop == 'Predicate':
+        if prop.lower() == 'predicate':
             if not d['attributes'].get('references'):
                 d['attributes']['references'] = ';'.join([i.lstrip('option') for i in usedOptions.keys()])
             if OPTIONTRACE:
@@ -132,6 +135,37 @@ def reader(story):
                 except:
                     print(f'Disable Optiontrace From Line {index}!')
                     OPTIONTRACE = False
+
+        if prop.lower() == 'character' or prop.lower() == 'charslot':
+            if not d['attributes'].get('name'):
+                characterStack = {}
+                crt_char = None
+            else:
+                if d['attributes'].get('name'):
+                    if d['attributes'].get('slot'):
+                        characterStack[d['attributes']['slot']] = d['attributes']['name']
+                    else:
+                        characterStack['1'] = d['attributes']['name']
+                
+                if d['attributes'].get('name2'):
+                    characterStack['2'] = d['attributes']['name2']
+
+
+                if d['attributes'].get('focus'):
+                    if not type(d['attributes'].get('focus')) == str:
+                        focus = str(int(d['attributes']['focus']))
+                    else:
+                        focus = d['attributes']['focus']
+                    if not focus.lower() == 'none':
+                        crt_char = characterStack.get(focus)
+                elif len(characterStack) == 1:
+                    crt_char = list(characterStack.values())[0]
+
+        if prop.lower() == 'name':
+            if d['attributes'].get('name') and crt_char:
+                    d['figure_art'] = crt_char
+
+
 
         if d['attributes'].get('text'):
             if COUNTER_FLAG:
@@ -153,7 +187,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--all',action='store_true',help="Update all json file or not")
 
-    args = parser.parse_args()
+    args = parser.parse_args(['--all'])
 
     UPDATE_ALL = args.all
 

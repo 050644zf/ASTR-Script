@@ -72,6 +72,11 @@ positional arguments:
 
 config the `path` in the `relic.py` and the properties you want to export and run the program directly
 
+## 2.5
+
+- Fix the property regex
+- Add ability to find the figure art to corresponding character name.
+
 ## 2.4
 
 - Add ability to load extra/hidden stories
