@@ -187,7 +187,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--all',action='store_true',help="Update all json file or not")
 
-    args = parser.parse_args(['--all'])
+    args = parser.parse_args()
 
     UPDATE_ALL = args.all
 
