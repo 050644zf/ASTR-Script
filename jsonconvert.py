@@ -8,7 +8,7 @@ import func
 import json
 
 prRe = r"^(?:\[(?P<prop>\w+).*?\])?(?P<content>.*)$"
-pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>\".+?\"|[\d\.]+|\w+),?\s{,3})"
+pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>[\"\'].+?[\"\']|[\d\.]+|\w+),?\s{,3})"
 characters = []
 codes = []
 characterFlag = False
@@ -81,7 +81,7 @@ def reader(story):
                 try:
                     value = float(value)
                 except ValueError:
-                    if value[0] == '"':
+                    if value[0] == '"' or value[0] == "'":
                         value = value[1:-1]
                 d['attributes'][attr] = value
                 if attr == 'image':
