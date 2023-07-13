@@ -14,7 +14,7 @@ items = ['id','name','usage','description','rarity','unlockCondDesc']
 if __name__ == "__main__":
     with open(path, encoding='utf-8') as relicsfile:
         # relics = json.load(relicsfile)['details']['rogue_1']['monthMission']
-        relics = json.load(relicsfile)['details']['rogue_2']['items']
+        relics = json.load(relicsfile)['details']['rogue_3']['items']
         # relics = json.load(relicsfile)['carData']['carDict']
         
 
@@ -33,6 +33,6 @@ if __name__ == "__main__":
         sheets.append(sheet)
 
     # wb.save('is_missions.xlsx')
-    wb.save('is2_relics.xlsx')
+    wb.save('is4_relics.xlsx')
         
             

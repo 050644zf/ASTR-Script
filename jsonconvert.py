@@ -8,7 +8,7 @@ import func
 import json
 
 prRe = r"^(?:\[(?P<prop>\w+).*?\])?(?P<content>.*)$"
-pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>[\"\'].+?[\"\']|[\d\.]+|\w+),?\s{,3})"
+pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>\".+?\"|\'.+?\'|[\d\.]+|\w+),?\s{,3})"
 characters = []
 codes = []
 characterFlag = False
