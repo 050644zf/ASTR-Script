@@ -213,7 +213,8 @@ if __name__=='__main__':
         latest_CN = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
 
         with urllib.request.urlopen('https://api.github.com/repos/Kengxxiao/ArknightsGameData_YoStar/commits') as f:
-            content = f.read()        
+            content = f.read()
+        content = json.loads(content)        
         latest = content[0]["commit"]["author"]["date"]
         latest_global = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
 
