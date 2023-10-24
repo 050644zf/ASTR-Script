@@ -210,7 +210,15 @@ if __name__=='__main__':
             content = f.read()
         content = json.loads(content)
         latest = content[0]["commit"]["author"]["date"]
-        latest = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
+        latest_CN = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
+
+        with urllib.request.urlopen('https://api.github.com/repos/Kengxxiao/ArknightsGameData_YoStar/commits') as f:
+            content = f.read()        
+        latest = content[0]["commit"]["author"]["date"]
+        latest_global = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
+
+        latest = max(latest_CN,latest_global)
+
         if latest>logData["latestCommitTime"]:
             logData["latestCommitTime"] = latest
             with open('ArknightsStoryJson/log.json','w', encoding='utf-8') as logFile:
@@ -230,12 +238,15 @@ if __name__=='__main__':
     
     #     os.chdir('..')
 
-
-    langs = [i.stem for i in Path('ArknightsGameData').iterdir() if i.is_dir() and not '.' in i.name]
-    dataPath = Path('ArknightsGameData')
+    langs = ['zh_CN']
+    langs = [i.stem for i in Path('ArknightsGameData_YoStar').iterdir() if i.is_dir() and not '.' in i.name]
+    
     jsonDataPath = Path('ArknightsStoryJson')
 
     for lang in langs:
+
+        dataPath = Path('ArknightsGameData') if lang == 'zh_CN' else Path(f'ArknightsGameData_YoStar')
+
         print(f'Server: {lang}')
         events = func.getEvents(dataPath, lang)
         with open(f'ArknightsStoryJson/{lang}/storyinfo.json',encoding='utf-8') as jsonFile:

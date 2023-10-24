@@ -72,6 +72,10 @@ positional arguments:
 
 config the `path` in the `relic.py` and the properties you want to export and run the program directly
 
+## 2.6
+
+- Changes EN/JP/KR server data source
+
 ## 2.5
 
 - Fix the property regex
