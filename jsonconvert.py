@@ -314,7 +314,7 @@ if __name__=='__main__':
 
 
 
-        with open(f'ArknightsGameData/{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
+        with open(dataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
             characterData = json.load(jsonFile)
 
         charDict = {}
