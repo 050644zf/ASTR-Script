@@ -240,7 +240,7 @@ if __name__=='__main__':
     #     os.chdir('..')
 
     langs = ['zh_CN']
-    langs = [i.stem for i in Path('ArknightsGameData_YoStar').iterdir() if i.is_dir() and not '.' in i.name]
+    langs += [i.stem for i in Path('ArknightsGameData_YoStar').iterdir() if i.is_dir() and not '.' in i.name]
     
     jsonDataPath = Path('ArknightsStoryJson')
 
