@@ -186,26 +186,28 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--all',action='store_true',help="Update all json file or not")
+    parser.add_argument('-o', '--offline', action='store_true', help="Offline mode, disable git update.")
 
     args = parser.parse_args()
 
     UPDATE_ALL = args.all
 
-
-
-    import subprocess
-    import time
-    import urllib.request
-    subprocess.run('git config --global user.email "050644zf@outlook.com"',shell=True)
-    subprocess.run('git config --global user.name "Nightsky"', shell=True)
-    if not Path('ArknightsStoryJson').is_dir():
-        subprocess.run('git clone https://github.com/050644zf/ArknightsStoryJson.git', shell=True)
+    OFFLINE = args.offline
+    
+    if not OFFLINE:
+        import subprocess
+        import time
+        import urllib.request
+        subprocess.run('git config --global user.email "050644zf@outlook.com"',shell=True)
+        subprocess.run('git config --global user.name "Nightsky"', shell=True)
+        if not Path('ArknightsStoryJson').is_dir():
+            subprocess.run('git clone https://github.com/050644zf/ArknightsStoryJson.git', shell=True)
 
     with open('ArknightsStoryJson/log.json', encoding='utf-8') as logFile:
         logData = json.load(logFile)
 
     
-    if not UPDATE_ALL:
+    if not UPDATE_ALL and not OFFLINE:
         with urllib.request.urlopen('https://api.github.com/repos/Kengxxiao/ArknightsGameData/commits') as f:
             content = f.read()
         content = json.loads(content)
@@ -249,6 +251,51 @@ if __name__=='__main__':
         dataPath = Path('ArknightsGameData') if lang == 'zh_CN' else Path(f'ArknightsGameData_YoStar')
 
         print(f'Server: {lang}')
+        
+        # load characters data
+        with open(dataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
+            characterData = json.load(jsonFile)
+        
+        with open(dataPath/f'{lang}/gamedata/excel/uniequip_table.json', encoding='utf-8') as jsonFile:
+            equipData = json.load(jsonFile)
+            equipDict = equipData['equipDict']
+
+        with open(dataPath/f'{lang}/gamedata/excel/handbook_info_table.json', encoding='utf-8') as jsonFile:
+            handbookData = json.load(jsonFile)['handbookDict']
+            
+
+        # legacy file, keep it for safety
+        charDict = {}
+
+        for cid in characterData:
+            if cid.split('_')[0] == 'char':
+                cidx = cid.split('_')[1]
+                cin = cid.split('_')[2]
+                charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}
+
+        
+        # new file, use this for future
+        charInfo = handbookData
+
+        get_properties = ['name','rarity','profession','nationId', 'displayNumber', 'appellation', 'itemUsage', 'itemDesc']
+
+        for cid in characterData:
+            if characterData[cid]['isNotObtainable']:
+                continue
+            try:
+                for prop in get_properties:
+                        charInfo[cid][prop] = characterData[cid][prop]
+                handbookData[cid]['equips'] = []
+            except KeyError:
+                continue
+
+        for char, equips in equipData['charEquip'].items():
+            for equip_id in equips:
+                charInfo[char]['equips'].append(equipDict[equip_id])
+            
+        
+
+
         events = func.getEvents(dataPath, lang)
         with open(f'ArknightsStoryJson/{lang}/storyinfo.json',encoding='utf-8') as jsonFile:
             storyInfo = json.load(jsonFile)
@@ -314,23 +361,16 @@ if __name__=='__main__':
 
 
 
-        with open(dataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
-            characterData = json.load(jsonFile)
 
-        charDict = {}
-
-        for cid in characterData:
-            if cid.split('_')[0] == 'char':
-                cidx = cid.split('_')[1]
-                cin = cid.split('_')[2]
-                charDict[cin] = {'name':characterData[cid]['name'],'id':cidx}            
 
 
         with open(f'ArknightsStoryJson/{lang}/chardict.json','w',encoding='utf-8') as jsonFile:
             json.dump(charDict, jsonFile, indent=4, ensure_ascii=False)
             print(f'Character Data exported!')
 
-
+        with open(f'ArknightsStoryJson/{lang}/charinfo.json','w',encoding='utf-8') as jsonFile:
+            json.dump(charInfo, jsonFile, indent=4, ensure_ascii=False)
+            print(f'Character Info Data exported!')
 
         with open(f'ArknightsStoryJson/{lang}/storyinfo.json','w',encoding='utf-8') as jsonFile:
             json.dump(storyInfo, jsonFile, indent=4, ensure_ascii=False)
@@ -347,14 +387,14 @@ if __name__=='__main__':
 
     
     
-
-    os.chdir('ArknightsStoryJson')
-    subprocess.run('git fetch', shell=True)
-    subprocess.run('git pull', shell=True)
-    subprocess.run('git add -A', shell=True)
-    subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True)
-    print(f'Commit {time.strftime("%Y%m%d")} has created!')
-    os.chdir('..')
+    if not OFFLINE:
+        os.chdir('ArknightsStoryJson')
+        subprocess.run('git fetch', shell=True)
+        subprocess.run('git pull', shell=True)
+        subprocess.run('git add -A', shell=True)
+        subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True)
+        print(f'Commit {time.strftime("%Y%m%d")} has created!')
+        os.chdir('..')
 
     print('Update Success!')
 

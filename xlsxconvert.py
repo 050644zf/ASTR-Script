@@ -157,11 +157,11 @@ if __name__ == "__main__":
             for event in mainList:
                 print(f'| {idx:<2}: {event.eventid:<20} {event.name:<}')
                 idx += 1
-            if len(recList):
-                print('===RECORDS===')
-                for event in recList:
-                    print(f'| {idx:<2}: {event.eventid:<20} {event.name:<}')
-                    idx += 1
+            # if len(recList):
+            #     print('===RECORDS===')
+            #     for event in recList:
+            #         print(f'| {idx:<2}: {event.eventid:<20} {event.name:<}')
+            #         idx += 1
             exit()
     except IndexError:
         pass
