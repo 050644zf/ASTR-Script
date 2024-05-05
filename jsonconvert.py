@@ -35,8 +35,10 @@ def reader(story):
         if story.storyInfo:
             with open(story.storyInfo, encoding='utf-8') as txtFile:
                 storydict['storyInfo'] = txtFile.read()
-        elif story.rawStoryInfo:
+        elif getattr(story,'rawStoryInfo',None):
             storydict['storyInfo'] = story.rawStoryInfo
+        else:
+            storydict['storyInfo'] = ''
     if isinstance(story, str):
         rawstorytext = story
         storydict = {}

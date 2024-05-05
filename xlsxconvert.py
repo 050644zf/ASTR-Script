@@ -134,7 +134,6 @@ if __name__ == "__main__":
                         const=True, default=False, help="Show story info in menu")
     parser.add_argument('--web', action='store_const', const=True, default=False, help="online mode for ASTR website")
     args = parser.parse_args()
-    #args=parser.parse_args(['-r','-i'])
 
 
     from jsonconvert import reader
