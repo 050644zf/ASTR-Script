@@ -293,7 +293,10 @@ if __name__=='__main__':
 
         for char, equips in equipData['charEquip'].items():
             for equip_id in equips:
-                charInfo[char]['equips'].append(equipDict[equip_id])
+                try:
+                    charInfo[char]['equips'].append(equipDict[equip_id])
+                except KeyError:
+                    continue
             
         
 
