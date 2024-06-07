@@ -287,8 +287,8 @@ if __name__=='__main__':
         get_properties = ['name','rarity','profession','nationId', 'displayNumber', 'appellation', 'itemUsage', 'itemDesc']
 
         for cid in characterData:
-            if characterData[cid]['isNotObtainable']:
-                continue
+            # if characterData[cid]['isNotObtainable']:
+            #     continue
             if cid == 'char_002_amiya':
                 for amiya in amiyas:
                     charInfo[amiya] = charInfo[cid].copy()
