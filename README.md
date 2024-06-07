@@ -72,6 +72,10 @@ positional arguments:
 
 config the `path` in the `relic.py` and the properties you want to export and run the program directly
 
+## 2.9
+
+- rewrite code for amiya promotion
+
 ## 2.7
 
 - add offline mode for `jsonconvert.py`

@@ -264,6 +264,11 @@ if __name__=='__main__':
 
         with open(dataPath/f'{lang}/gamedata/excel/handbook_info_table.json', encoding='utf-8') as jsonFile:
             handbookData = json.load(jsonFile)['handbookDict']
+
+        with open(dataPath/f'{lang}/gamedata/excel/char_patch_table.json', encoding='utf-8') as jsonFile:
+            amiyaFile = json.load(jsonFile)
+            amiyaData = amiyaFile['patchChars']
+            amiyas = amiyaFile['infos']['char_002_amiya']['tmplIds']
             
 
         # legacy file, keep it for safety
@@ -284,12 +289,34 @@ if __name__=='__main__':
         for cid in characterData:
             if characterData[cid]['isNotObtainable']:
                 continue
-            try:
-                for prop in get_properties:
+            if cid == 'char_002_amiya':
+                for amiya in amiyas:
+                    charInfo[amiya] = charInfo[cid].copy()
+                    charInfo[amiya]['charID'] = amiya
+                    if amiya == cid:
+                        for prop in get_properties:
+                                charInfo[cid][prop] = characterData[cid][prop]
+                    else:
+                        for prop in get_properties:
+                            charInfo[amiya][prop] = amiyaData[amiya][prop]
+                    stories = []
+                    for story in charInfo[amiya]['storyTextAudio']:
+                        if not story['stories'][0].get('patchIdList'):
+                            stories.append(story)
+                        elif amiya in story['stories'][0]['patchIdList']:
+                            stories.append(story)
+                    
+                    charInfo[amiya]['storyTextAudio'] = stories
+                    charInfo[amiya]['equips'] = []
+
+            else:
+                try:
+                    for prop in get_properties:
                         charInfo[cid][prop] = characterData[cid][prop]
-                handbookData[cid]['equips'] = []
-            except KeyError:
-                continue
+                    charInfo[cid]['equips'] = []
+                except KeyError:
+                    continue
+
 
         for char, equips in equipData['charEquip'].items():
             for equip_id in equips:
