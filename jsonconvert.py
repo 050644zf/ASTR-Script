@@ -67,7 +67,7 @@ def reader(story):
         d['prop'] = prop
         d['attributes'] = {}
         parameters = re.findall(pmRe, line)
-        if prop == 'name' or prop == '' or prop == None:
+        if prop in ['name', '', 'animtext'] or prop is None:
             prop = 'name'
             d['prop'] = 'name'
             d['attributes']['content'] = content
