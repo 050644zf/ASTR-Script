@@ -67,13 +67,18 @@ def reader(story):
         d['prop'] = prop
         d['attributes'] = {}
         parameters = re.findall(pmRe, line)
-        if prop in ['name', '', 'animtext'] or prop is None:
+        if prop in ['name', ''] or prop is None:
             prop = 'name'
             d['prop'] = 'name'
             d['attributes']['content'] = content
             if COUNTER_FLAG:
                 counter += len(content.split()) if story.lang == 'en_US' else len(content)
-        
+        if prop in ['animtext']:
+            prop = 'animtext'
+            d['prop'] = 'animtext'
+            d['attributes']['content'] = content
+            if COUNTER_FLAG:
+                counter += len(content.split()) if story.lang == 'en_US' else len(content)        
 
             
 
