@@ -1,11 +1,10 @@
-from ast import arg
-from itertools import count
 import re
 import argparse
 from pathlib import Path
 import os
 import func
 import json
+import shutil
 
 prRe = r"^(?:\[(?P<prop>\w+).*?\])?(?P<content>.*)$"
 pmRe = r"(?:(?P<attr>\w+)\s*=\s*(?P<value>\".+?\"|\'.+?\'|[\d\.]+|\w+),?\s{,3})"
@@ -258,19 +257,27 @@ if __name__=='__main__':
         dataPath = Path('ArknightsGameData') if lang == 'zh_CN' else Path(f'ArknightsGameData_YoStar')
 
         print(f'Server: {lang}')
+
+        # copy excel
+        shutil.copytree(
+            dataPath / f"{lang}/gamedata/excel",
+            jsonDataPath / f"{lang}/gamedata/excel",
+            dirs_exist_ok=True,
+        )
+        print("Excel copied!")
         
         # load characters data
-        with open(dataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
+        with open(jsonDataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
             characterData = json.load(jsonFile)
         
-        with open(dataPath/f'{lang}/gamedata/excel/uniequip_table.json', encoding='utf-8') as jsonFile:
+        with open(jsonDataPath/f'{lang}/gamedata/excel/uniequip_table.json', encoding='utf-8') as jsonFile:
             equipData = json.load(jsonFile)
             equipDict = equipData['equipDict']
 
-        with open(dataPath/f'{lang}/gamedata/excel/handbook_info_table.json', encoding='utf-8') as jsonFile:
+        with open(jsonDataPath/f'{lang}/gamedata/excel/handbook_info_table.json', encoding='utf-8') as jsonFile:
             handbookData = json.load(jsonFile)['handbookDict']
 
-        with open(dataPath/f'{lang}/gamedata/excel/char_patch_table.json', encoding='utf-8') as jsonFile:
+        with open(jsonDataPath/f'{lang}/gamedata/excel/char_patch_table.json', encoding='utf-8') as jsonFile:
             amiyaFile = json.load(jsonFile)
             amiyaData = amiyaFile['patchChars']
             amiyas = amiyaFile['infos']['char_002_amiya']['tmplIds']
