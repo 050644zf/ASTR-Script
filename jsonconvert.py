@@ -265,6 +265,13 @@ if __name__=='__main__':
             dirs_exist_ok=True,
         )
         print("Excel copied!")
+
+        # copy rogue story
+        shutil.copytree(
+            dataPath / f"{lang}/gamedata/story/obt/rogue",
+            jsonDataPath / f"{lang}/gamedata/story/obt/rogue",
+            dirs_exist_ok=True,
+        )
         
         # load characters data
         with open(jsonDataPath/ f'{lang}/gamedata/excel/character_table.json', encoding='utf-8') as jsonFile:
