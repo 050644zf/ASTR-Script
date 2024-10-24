@@ -142,30 +142,41 @@ def reader(story):
                     print(f'Disable Optiontrace From Line {index}!')
                     OPTIONTRACE = False
 
-        if prop.lower() == 'character' or prop.lower() == 'charslot':
-            if not d['attributes'].get('name'):
+        if prop.lower() == 'character':
+            if not (d['attributes'].get('name') and d['attributes'].get('name2')):
                 characterStack = {}
-                crt_char = None
-            else:
-                if d['attributes'].get('name'):
-                    if d['attributes'].get('slot'):
-                        characterStack[d['attributes']['slot']] = d['attributes']['name']
-                    else:
-                        characterStack['1'] = d['attributes']['name']
-                
-                if d['attributes'].get('name2'):
-                    characterStack['2'] = d['attributes']['name2']
+                crt_char = None                
+
+            if d['attributes'].get('name'):
+                characterStack[1] = d['attributes']['name']
+            
+            if d['attributes'].get('name2'):
+                characterStack[2] = d['attributes']['name2']
+            if d['attributes'].get('focus'):
+                focus = int(d['attributes']['focus'])
+                crt_char = characterStack.get(focus)
+            elif len(characterStack) == 1:
+                crt_char = list(characterStack.values())[0]
 
 
-                if d['attributes'].get('focus'):
-                    if not type(d['attributes'].get('focus')) == str:
-                        focus = str(int(d['attributes']['focus']))
-                    else:
-                        focus = d['attributes']['focus']
-                    if not focus.lower() == 'none':
-                        crt_char = characterStack.get(focus)
-                elif len(characterStack) == 1:
-                    crt_char = list(characterStack.values())[0]
+        if  prop.lower() == 'charslot':
+            if d['attributes'].get('name'):
+                if d['attributes'].get('slot'):
+                    characterStack[d['attributes']['slot']] = d['attributes']['name']
+
+
+            if d['attributes'].get('focus'):
+                focus = d['attributes']['focus']
+                if not focus.lower() == 'none':
+                    crt_char = characterStack.get(focus)
+                else:
+                    crt_char = None
+            elif len(characterStack) == 1:
+                crt_char = list(characterStack.values())[0]
+
+        if prop.lower() == 'dialog':
+            characterStack = {}
+            crt_char = None
 
         if prop.lower() == 'name':
             if d['attributes'].get('name') and crt_char:
