@@ -1,6 +1,8 @@
 #!/bin/bash  
+mkdir tmp
+cd ArknightsStoryJson
 set -e  
 while read line  
 do  
-  mkdir -p tmp/$line && cp ArknightsStoryJson/$line tmp/$line
-done <changes.txt
+  cp $line ../tmp --parents
+done <../changes.txt
