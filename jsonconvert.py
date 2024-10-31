@@ -204,12 +204,15 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--all',action='store_true',help="Update all json file or not")
     parser.add_argument('-o', '--offline', action='store_true', help="Offline mode, disable git update.")
+    parser.add_argument('-q', '--quiet', action='store_true', help="Quiet mode, disable output.")
 
     args = parser.parse_args()
 
     UPDATE_ALL = args.all
 
     OFFLINE = args.offline
+
+    QUIET = args.quiet
     
     if not OFFLINE:
         import subprocess
@@ -389,7 +392,8 @@ if __name__=='__main__':
                 
                 with open(jsonPath, 'w', encoding='utf-8') as jsonFile:
                     json.dump(storyJson,jsonFile, indent=4, ensure_ascii=False)
-                    print(f'File {jsonPath} exported!')
+                    if not QUIET:
+                        print(f'File {jsonPath} exported!')
                 
                 wordCount[event.eventid][str(story.f)] = counter
 
@@ -409,7 +413,8 @@ if __name__=='__main__':
 
                 with open(jsonPath, 'w', encoding='utf-8') as jsonFile:
                     json.dump(storyJson,jsonFile, indent=4, ensure_ascii=False)
-                    print(f'File {jsonPath} exported!')
+                    if not QUIET:
+                        print(f'File {jsonPath} exported!')
 
                 extraInfo["extra"].append({
                     "storyName": extra.storyName,
@@ -453,6 +458,7 @@ if __name__=='__main__':
         os.chdir('ArknightsStoryJson')
         subprocess.run('git fetch', shell=True)
         subprocess.run('git pull', shell=True)
+        subprocess.run('git diff --name-only > ../changes.txt', shell=True)
         subprocess.run('git add -A', shell=True)
         subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True)
         print(f'Commit {time.strftime("%Y%m%d")} has created!')
