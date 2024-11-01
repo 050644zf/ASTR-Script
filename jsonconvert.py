@@ -460,6 +460,7 @@ if __name__=='__main__':
         subprocess.run('git pull', shell=True)
         subprocess.run('git add -A -N', shell=True)
         subprocess.run('git diff --name-only --diff-filter=d > ../changes.txt', shell=True)
+        subprocess.run('git add -A', shell=True)
         subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True)
         print(f'Commit {time.strftime("%Y%m%d")} has created!')
         os.chdir('..')
