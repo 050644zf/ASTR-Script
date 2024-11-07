@@ -218,10 +218,10 @@ if __name__=='__main__':
         import subprocess
         import time
         import urllib.request
-        subprocess.run('git config --global user.email "050644zf@outlook.com"',shell=True)
-        subprocess.run('git config --global user.name "Nightsky"', shell=True)
+        subprocess.run('git config --global user.email "050644zf@outlook.com"', check=True)
+        subprocess.run('git config --global user.name "Nightsky"',  check=True)
         if not Path('ArknightsStoryJson').is_dir():
-            subprocess.run('git clone https://github.com/050644zf/ArknightsStoryJson.git', shell=True)
+            subprocess.run('git clone https://github.com/050644zf/ArknightsStoryJson.git',  check=True)
 
     with open('ArknightsStoryJson/log.json', encoding='utf-8') as logFile:
         logData = json.load(logFile)
@@ -460,29 +460,29 @@ if __name__=='__main__':
             lastCommitHash = logData.get('lastCommitHash',None)
         
         os.chdir('ArknightsStoryJson')
-        subprocess.run('git fetch', shell=True, check=True)
-        subprocess.run('git pull', shell=True, check=True)
-        # subprocess.run('git add -A -N', shell=True, check=True)
+        subprocess.run('git fetch',  check=True)
+        subprocess.run('git pull',  check=True)
+        # subprocess.run('git add -A -N',  check=True)
 
-        subprocess.run('git add -A', shell=True, check=True)
+        subprocess.run('git add -A',  check=True)
         # commit and get hash
-        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}', shell=True, check=True)
-        commit_result = subprocess.run('git log -1 --format=%H', capture_output=True, shell=True, check=True, text=True)
+        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}',  check=True)
+        commit_result = subprocess.run('git log -1 --format=%H', capture_output=True,  check=True, text=True)
         latest_hash = commit_result.stdout.strip()
         logData['lastCommitHash'] = latest_hash
 
         with open('log.json','w', encoding='utf-8') as logFile:
             json.dump(logData,logFile)
 
-        subprocess.run('git add -A', shell=True, check=True)
+        subprocess.run('git add -A',  check=True)
         # commit and get hash
-        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}', shell=True, check=True)
-        commit_result = subprocess.run('git log -1 --format=%H', capture_output=True, shell=True, check=True, text=True)
+        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}',  check=True)
+        commit_result = subprocess.run('git log -1 --format=%H', capture_output=True,  check=True, text=True)
         latest_hash = commit_result.stdout.strip()
 
         if lastCommitHash:
-            subprocess.run(f'git diff --name-only --diff-filter=d {lastCommitHash} {latest_hash}> ../changes.txt', shell=True, check=True)
-            subprocess.run(f'git diff --name-only --diff-filter=D {lastCommitHash} {latest_hash}> ../deletion.txt', shell=True, check=True)
+            subprocess.run(f'git diff --name-only --diff-filter=d {lastCommitHash} {latest_hash} > ../changes.txt',  check=True)
+            subprocess.run(f'git diff --name-only --diff-filter=D {lastCommitHash} {latest_hash} > ../deletion.txt',  check=True)
 
         # else:
         #     subprocess.run('git diff --name-only --diff-filter=d > ../changes.txt', shell=True, check=True)
