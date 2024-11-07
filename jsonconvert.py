@@ -466,7 +466,7 @@ if __name__=='__main__':
 
         subprocess.run('git add -A', shell=True, check=True)
         # commit and get hash
-        subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True, check=True)
+        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}', shell=True, check=True)
         commit_result = subprocess.run('git log -1 --format=%H', capture_output=True, shell=True, check=True, text=True)
         latest_hash = commit_result.stdout.strip()
         logData['lastCommitHash'] = latest_hash
@@ -476,7 +476,7 @@ if __name__=='__main__':
 
         subprocess.run('git add -A', shell=True, check=True)
         # commit and get hash
-        subprocess.run(f'git commit -m {time.strftime("%Y%m%d")}', shell=True, check=True)
+        subprocess.run(f'git commit --allow-empty -m {time.strftime("%Y%m%d")}', shell=True, check=True)
         commit_result = subprocess.run('git log -1 --format=%H', capture_output=True, shell=True, check=True, text=True)
         latest_hash = commit_result.stdout.strip()
 
