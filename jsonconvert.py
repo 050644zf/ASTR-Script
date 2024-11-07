@@ -481,8 +481,12 @@ if __name__=='__main__':
         latest_hash = commit_result.stdout.strip()
 
         if lastCommitHash:
-            subprocess.run(f'git diff --name-only --diff-filter=d {lastCommitHash} {latest_hash} > ../changes.txt',  check=True, shell=True)
-            subprocess.run(f'git diff --name-only --diff-filter=D {lastCommitHash} {latest_hash} > ../deletion.txt',  check=True, shell=True)
+            try:
+                subprocess.run(f'git diff --name-only --diff-filter=d {lastCommitHash} {latest_hash} > ../changes.txt',  check=True, shell=True)
+                subprocess.run(f'git diff --name-only --diff-filter=D {lastCommitHash} {latest_hash} > ../deletion.txt',  check=True, shell=True)
+            except subprocess.CalledProcessError as result:
+                print(result.stderr)
+
 
         # else:
         #     subprocess.run('git diff --name-only --diff-filter=d > ../changes.txt', shell=True, check=True, shell=True)
