@@ -26,7 +26,7 @@ class Event():
         self.storyList = self.review['infoUnlockDatas']
 
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx)->'Story':
         return Story(self, self.storyList[idx])
 
     def __len__(self):
