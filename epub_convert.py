@@ -48,7 +48,7 @@ def parseHTML(story_json):
         if prop == "name":
             lines.append(
                 EPUB_NAME_TEMPLATE.format(
-                    index=index,
+                    index=f'line{index}',
                     name=attrs.get('name',''), content=parseContent(attrs.get("content", ""))
                 )
             )
@@ -56,7 +56,7 @@ def parseHTML(story_json):
         if prop == 'multiline':
             lines.append(
                 EPUB_NAME_TEMPLATE.format(
-                    index=index,
+                    index=f'line{index}',
                     name=attrs.get('name',''), content=parseContent(attrs.get("content", ""))
                 )
             )
@@ -65,30 +65,30 @@ def parseHTML(story_json):
             options = attrs['options'].split(';')
             values = attrs['values'].split(';')
             targetLines = line['targetLine']
-            options = ''
-            for i, option in enumerate(options):
-                options += EPUB_BRANCH_TEMPLATE.format(index=targetLines[f'option{values}'], option=option)
+            options_html = []
+            for i in range(min(len(values),len(options))):
+                options_html.append(EPUB_BRANCH_TEMPLATE.format(index=targetLines.get(f'option{values[i]}',f'{index+1}'), option=options[i]))
             lines.append(
-                '<ol id="{index}">{options}</ol>'.format(index=index, options=options)
+                '<p id="line{index}">\n<ol>\n{options}\n</ol>\n</p>'.format(index=index, options='\n'.join(options_html))
             )
         
         if prop == 'predicate':
             if line.get('endOfOpt'):
-                lines.append('<p id="{index}">---End of Options---</p>'.format(index=index))
+                lines.append('<p id="line{index}">---End of Options---</p>'.format(index=index))
             else:
-                lines.append('<p id="{index}">---{option}---</p>'.format(index=index,option=attrs['references'].replace(';', '&')))
+                lines.append('<p id="line{index}">---{option}---</p>'.format(index=index,option=attrs['references'].replace(';', '&')))
 
         if prop == 'subtitle':
-            lines.append('<br/><p id="{index}">{content}</p><br/>'.format(index=index, content=parseContent(attrs.get('text', ''))))
+            lines.append('<br/><p id="line{index}">{content}</p><br/>'.format(index=index, content=parseContent(attrs.get('text', ''))))
 
         if prop == 'sticker':
-            lines.append('<br/><p id="{index}"><strong>{content}</strong></p>'.format(index=index, content=parseContent(attrs.get('text', ''))))
+            lines.append('<br/><p id="line{index}"><strong>{content}</strong></p>'.format(index=index, content=parseContent(attrs.get('text', ''))))
 
         if prop == 'stickerclear':
             lines.append('<br/>')
 
         if prop == 'image':
-            lines.append('<p id="{index}">{content}</p>'.format(index=index, content=attrs.get('image', '')))
+            lines.append('<p id="line{index}">{content}</p>'.format(index=index, content=attrs.get('image', '')))
 
 
     return lines
@@ -100,7 +100,7 @@ DATA_PATH = Path(r"ArknightsStoryJson")
 
 lang = "zh_CN"
 epub_lang = lang.replace("_", "-")
-event_id = "main_0"
+event_id = "act40side"
 event: Iterable[func.Story] = func.Event(DATA_PATH, lang, event_id)
 
 file_name = f"{event.eventid}_{event.name}.epub"
@@ -122,7 +122,9 @@ for idx, story in enumerate(event):
         story_json = json.load(f)
 
     lines = parseHTML(story_json)
-    chapter.content = EPUB_CHAPTER_TEMPLATE.format(story=story, lines="".join(lines))
+    chapter.content = EPUB_CHAPTER_TEMPLATE.format(story=story, lines="\n".join(lines))
+    with open(f'htmls/{chapter.file_name}', 'w', encoding='utf-8') as f:
+        f.write(chapter.content)
     book.add_item(chapter)
     chapters.append(chapter)
 
