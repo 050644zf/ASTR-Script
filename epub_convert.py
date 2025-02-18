@@ -20,9 +20,9 @@ EPUB_CHAPTER_TEMPLATE = """<html>
 
 DOCTOR = "Doctor"
 
-EPUB_NAME_TEMPLATE = "<p id={index}><strong>{name}</strong>&emsp;{content}</p>"
+EPUB_NAME_TEMPLATE = '<p id="{index}"><strong>{name}</strong>&emsp;{content}</p>'
 
-EPUB_BRANCH_TEMPLATE = "<li><a href=#{index}>{option}</a></li>"
+EPUB_BRANCH_TEMPLATE = '<li><a href="#{index}">{option}</a></li>'
 
 
 def parseContent(content: str, doctor=DOCTOR) -> str:
@@ -96,7 +96,7 @@ def parseHTML(story_json):
 
 
 
-DATA_PATH = Path(r"ArknightsStoryJson")
+DATA_PATH = Path(r"D:\zf-py\ArknightsStoryJson")
 
 lang = "zh_CN"
 epub_lang = lang.replace("_", "-")
