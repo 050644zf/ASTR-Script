@@ -8,6 +8,8 @@ import re
 
 import func
 
+import argparse
+
 EPUB_CHAPTER_TEMPLATE = """<html>
   <head>
     <meta charset="UTF-8" />
@@ -92,15 +94,19 @@ def parseHTML(story_json):
 
 
     return lines
-        
+
+parser = argparse.ArgumentParser()
+parser.add_argument("event_id", help="Event ID")
+parser.add_argument("-l", "--lang", help="Language", default="zh_CN")
+args = parser.parse_args()
 
 
 
-DATA_PATH = Path(r"D:\zf-py\ArknightsStoryJson")
+DATA_PATH = Path(r"ArknightsStoryJson")
 
-lang = "zh_CN"
+lang = args.lang
 epub_lang = lang.replace("_", "-")
-event_id = "act40side"
+event_id = args.event_id
 event: Iterable[func.Story] = func.Event(DATA_PATH, lang, event_id)
 
 file_name = f"{event.eventid}_{event.name}.epub"
@@ -113,6 +119,7 @@ book.add_author("HyperGryph")
 
 chapters = []
 for idx, story in enumerate(event):
+    print(f"Processing {story.storyCode} {story.storyName} {story.avgTag}")
     chapter = epub.EpubHtml(
         title=f"{story.storyCode} {story.storyName} {story.avgTag}",
         file_name=f"{story.storyCode}_{story.storyName}_{story.avgTag}.xhtml",
@@ -122,6 +129,8 @@ for idx, story in enumerate(event):
         story_json = json.load(f)
 
     lines = parseHTML(story_json)
+    if len(lines) == 0:
+        lines = ["<p>Empty Chapter.</p>"]
     chapter.content = EPUB_CHAPTER_TEMPLATE.format(story=story, lines="\n".join(lines))
     with open(f'htmls/{chapter.file_name}', 'w', encoding='utf-8') as f:
         f.write(chapter.content)
