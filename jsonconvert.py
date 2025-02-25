@@ -55,16 +55,24 @@ def reader(story):
     crt_char = None
 
     for (index, line) in enumerate(rawstorylist):
-        d = {}
-        d['id'] = index
+        d = {'id':index, 'prop':'', 'attributes':{}}
+
         if '//' in line:
-            d['prop'] = 'Comment'
-            d['attributes'] = {}
-            d['attributes']['value'] = line.lstrip('//')
-            continue
+            comment = line.split('//')[1]
+            line = line.split('//')[0]
+
+            d['attributes']['comment'] = comment
+            
+            if len(line)==0:
+                d['prop'] = 'comment'
+                rawlist.append(d)
+                continue
+
+            
+
         prop,content = re.match(prRe, line).group('prop','content')
         d['prop'] = prop
-        d['attributes'] = {}
+
         parameters = re.findall(pmRe, line)
         if prop in ['name', ''] or prop is None:
             prop = 'name'
