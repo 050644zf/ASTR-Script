@@ -19,3 +19,5 @@ reader/dist/*
 *.ipynb
 ArknightsGameData_YoStar/
 /ArknightsResource
+/htmls
+*.epub
