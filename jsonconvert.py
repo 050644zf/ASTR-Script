@@ -194,7 +194,7 @@ def reader(story):
 
         if d['attributes'].get('text'):
             if COUNTER_FLAG:
-                counter += len(content.split()) if story.lang == 'en_US' else len(content)
+                counter += len(d['attributes']['text'].split()) if story.lang == 'en_US' else len(d['attributes']['text'])
         
         
         rawlist.append(d)
