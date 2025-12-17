@@ -122,7 +122,7 @@ def reader(story):
             options = d['attributes']['options'].split(';')
             if COUNTER_FLAG:
                 for option in options:
-                    counter += len(content.split()) if story.lang == 'en_US' else len(content)
+                    counter += len(option.split()) if story.lang == 'en_US' else len(option)
             values = [f"option{value}" for value in d['attributes']['values'].split(';')]
             if OPTIONTRACE:
                 for idx,value in enumerate(values[:len(options)]):
@@ -194,7 +194,7 @@ def reader(story):
 
         if d['attributes'].get('text'):
             if COUNTER_FLAG:
-                counter += len(content.split()) if story.lang == 'en_US' else len(content)
+                counter += len(d['attributes']['text'].split()) if story.lang == 'en_US' else len(d['attributes']['text'])
         
         
         rawlist.append(d)
