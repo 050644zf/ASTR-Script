@@ -26,7 +26,7 @@ class Event():
         self.storyList = self.review['infoUnlockDatas']
 
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx)->'Story':
         return Story(self, self.storyList[idx])
 
     def __len__(self):
@@ -45,7 +45,7 @@ class Story():
         self.storyData = storyData
         self.storyCode = storyData['storyCode']
         self.avgTag = storyData['avgTag'] if storyData['avgTag'] else ''
-        self.storyName = storyData['storyName']
+        self.storyName = storyData['storyName'].strip()
         self.storyInfo = self.root_dir/'gamedata/story/[uc]{}.txt'.format(storyData['storyInfo']) if storyData['storyInfo'] else None
         self.storyTxt = self.root_dir/'gamedata/story/{}.txt'.format(storyData['storyTxt'])
         self.f = storyData['storyTxt']
