@@ -14,6 +14,10 @@ characterFlag = False
 commentFlag = False
 infoFlag = False
 
+langs = ["zh_CN", "en_US", "ko_KR", "ja_JP", "zh_TW"]
+asset_names_map = {l:l.lower()[-2:] for l in langs}
+asset_names_map["en_US"] = 'en'
+asset_names_map_rev = {v:k for k,v in asset_names_map.items()}
 
 
 def reader(story):
@@ -22,7 +26,7 @@ def reader(story):
         with open(story.storyTxt, encoding='utf-8') as txtFile:
             rawstorytext = txtFile.read()
         storydict = {}
-        storydict['lang'] = story.lang
+        storydict['lang'] = asset_names_map_rev[story.lang]
         storydict['eventid'] = story.eventid
         storydict['eventName'] = story.eventName
         storydict['entryType'] = story.entryType
@@ -236,19 +240,13 @@ if __name__=='__main__':
 
     
     if not UPDATE_ALL and not OFFLINE:
-        with urllib.request.urlopen('https://api.github.com/repos/Kengxxiao/ArknightsGameData/commits') as f:
+        with urllib.request.urlopen('https://api.github.com/repos/ArknightsAssets/ArknightsGamedata/commits') as f:
             content = f.read()
         content = json.loads(content)
         latest = content[0]["commit"]["author"]["date"]
         latest_CN = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
 
-        with urllib.request.urlopen('https://api.github.com/repos/Kengxxiao/ArknightsGameData_YoStar/commits') as f:
-            content = f.read()
-        content = json.loads(content)        
-        latest = content[0]["commit"]["author"]["date"]
-        latest_global = time.mktime(time.strptime(latest,"%Y-%m-%dT%H:%M:%SZ"))
-
-        latest = max(latest_CN,latest_global)
+        latest = latest_CN
 
         if latest>logData["latestCommitTime"]:
             logData["latestCommitTime"] = latest
@@ -269,20 +267,22 @@ if __name__=='__main__':
     
     #     os.chdir('..')
 
-    langs = ['zh_CN']
-    langs += [i.stem for i in Path('ArknightsGameData_YoStar').iterdir() if i.is_dir() and not '.' in i.name]
+    # langs = ['zh_CN']
+    # langs += [i.stem for i in Path('ArknightsGameData_YoStar').iterdir() if i.is_dir() and not '.' in i.name]
+
+
     
     jsonDataPath = Path('ArknightsStoryJson')
 
     for lang in langs:
 
-        dataPath = Path('ArknightsGameData') if lang == 'zh_CN' else Path(f'ArknightsGameData_YoStar')
+        dataPath = Path('ArknightsGameData')
 
         print(f'Server: {lang}')
 
         # copy excel
         shutil.copytree(
-            dataPath / f"{lang}/gamedata/excel",
+            dataPath / f"{asset_names_map[lang]}/gamedata/excel",
             jsonDataPath / f"{lang}/gamedata/excel",
             dirs_exist_ok=True,
         )
@@ -290,7 +290,7 @@ if __name__=='__main__':
 
         # copy rogue story
         shutil.copytree(
-            dataPath / f"{lang}/gamedata/story/obt/rogue",
+            dataPath / f"{asset_names_map[lang]}/gamedata/story/obt/rogue",
             jsonDataPath / f"{lang}/gamedata/story/obt/rogue",
             dirs_exist_ok=True,
         )
@@ -369,7 +369,7 @@ if __name__=='__main__':
         
 
 
-        events = func.getEvents(dataPath, lang)
+        events = func.getEvents(dataPath, asset_names_map[lang])
         with open(f'ArknightsStoryJson/{lang}/storyinfo.json',encoding='utf-8') as jsonFile:
             storyInfo = json.load(jsonFile)
 
@@ -385,7 +385,7 @@ if __name__=='__main__':
 
             for story in event:
                 storyPath = Path(story.storyTxt)
-                jsonPath = jsonDataPath/storyPath.relative_to(dataPath).parent/Path(str(storyPath.stem)+'.json')
+                jsonPath = jsonDataPath/lang/storyPath.relative_to(dataPath/asset_names_map[lang]).parent/Path(str(storyPath.stem)+'.json')
                 if jsonPath.exists() and not UPDATE_ALL:
                     continue
 
@@ -399,18 +399,18 @@ if __name__=='__main__':
 
                 
                 with open(jsonPath, 'w', encoding='utf-8') as jsonFile:
-                    json.dump(storyJson,jsonFile, indent=4, ensure_ascii=False)
+                    json.dump(storyJson,jsonFile, ensure_ascii=False)
                     if not QUIET:
                         print(f'File {jsonPath} exported!')
                 
                 wordCount[event.eventid][str(story.f)] = counter
 
         try:
-            extra_list = func.getExtraAvg(dataPath, lang)
+            extra_list = func.getExtraAvg(dataPath, asset_names_map[lang])
             extraInfo["extra"] = []
             for extra in extra_list:
                 storyPath = Path(extra.storyTxt)
-                jsonPath = jsonDataPath/storyPath.relative_to(dataPath).parent/Path(str(storyPath.stem)+'.json')
+                jsonPath = jsonDataPath/lang/storyPath.relative_to(dataPath/asset_names_map[lang]).parent/Path(str(storyPath.stem)+'.json')
 
                 jsonPath.parent.mkdir(exist_ok=True, parents=True)
                 try:
@@ -420,7 +420,7 @@ if __name__=='__main__':
                     continue
 
                 with open(jsonPath, 'w', encoding='utf-8') as jsonFile:
-                    json.dump(storyJson,jsonFile, indent=4, ensure_ascii=False)
+                    json.dump(storyJson,jsonFile, ensure_ascii=False)
                     if not QUIET:
                         print(f'File {jsonPath} exported!')
 
@@ -440,23 +440,23 @@ if __name__=='__main__':
 
 
         with open(f'ArknightsStoryJson/{lang}/chardict.json','w',encoding='utf-8') as jsonFile:
-            json.dump(charDict, jsonFile, indent=4, ensure_ascii=False)
+            json.dump(charDict, jsonFile, ensure_ascii=False)
             print(f'Character Data exported!')
 
         with open(f'ArknightsStoryJson/{lang}/charinfo.json','w',encoding='utf-8') as jsonFile:
-            json.dump(charInfo, jsonFile, indent=4, ensure_ascii=False)
+            json.dump(charInfo, jsonFile, ensure_ascii=False)
             print(f'Character Info Data exported!')
 
         with open(f'ArknightsStoryJson/{lang}/storyinfo.json','w',encoding='utf-8') as jsonFile:
-            json.dump(storyInfo, jsonFile, indent=4, ensure_ascii=False)
+            json.dump(storyInfo, jsonFile, ensure_ascii=False)
             print(f'StoryInfo Data exported!')
 
         with open(f'ArknightsStoryJson/{lang}/wordcount.json','w',encoding='utf-8') as jsonFile:
-            json.dump(wordCount, jsonFile, indent=4, ensure_ascii=False)
+            json.dump(wordCount, jsonFile, ensure_ascii=False)
             print(f'WordCount Data exported!')
 
         with open(f'ArknightsStoryJson/{lang}/extrastory.json','w',encoding='utf-8') as jsonFile:
-            json.dump(extraInfo, jsonFile, indent=4, ensure_ascii=False)
+            json.dump(extraInfo, jsonFile, ensure_ascii=False)
             print(f'ExtraStory Data exported!')
 
 
