@@ -26,7 +26,8 @@ def reader(story):
         with open(story.storyTxt, encoding='utf-8') as txtFile:
             rawstorytext = txtFile.read()
         storydict = {}
-        storydict['lang'] = asset_names_map_rev[story.lang]
+        story.lang = asset_names_map_rev[story.lang]
+        storydict['lang'] = story.lang
         storydict['eventid'] = story.eventid
         storydict['eventName'] = story.eventName
         storydict['entryType'] = story.entryType
