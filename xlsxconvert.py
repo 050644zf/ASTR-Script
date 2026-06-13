@@ -321,7 +321,7 @@ if __name__ == "__main__":
                 cell.font = bold
 
             for idx, story in enumerate(event):
-                if infoFlag:
+                if infoFlag and story.storyInfo is not None:
                     with open(story.storyInfo, encoding='utf-8') as storyInfoFile:
                         storyInfo = storyInfoFile.read()
                 else:
